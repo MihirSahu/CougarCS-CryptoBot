@@ -7,7 +7,7 @@ import json
 
 #Docs: https://michaelhly.github.io/solana-py/
 
-client = Client("https://api.devnet.solana.com")
+solana_client = Client("https://api.devnet.solana.com")
 
 def create_account(sender_username):
     try:
@@ -30,7 +30,7 @@ def create_account(sender_username):
         print('error:', e)
         return None
 
-def get_private_key(sender_username):
+def load_wallet(sender_username):
     try:
         file_name = '{}.txt'.format(sender_username)
         with open(file_name) as json_file:
@@ -64,7 +64,7 @@ def get_balance(sender_username):
     try:
         account = load_wallet(sender_username)
         resp = solana_client.get_balance(account['public_key'])
-        print(resp)
+        #print(resp)
         balance = resp['result']['value'] / 1000000000
         data = {
             "publicKey": account['public_key'],
@@ -96,4 +96,9 @@ def send_sol(sender_username, amount, receiver):
         print('error:', e)
         return None
 
-create_account("MihirSahu")
+fund_account("account1", 2);
+print(get_balance("account1"))
+print(get_balance("account2"))
+send_sol("account1", 1, "account2")
+print(get_balance("account1"))
+print(get_balance("account2"))
