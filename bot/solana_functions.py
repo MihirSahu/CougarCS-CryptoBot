@@ -4,6 +4,7 @@ from solana.rpc.api import Client
 from solana.transaction import Transaction
 from solana.system_program import TransferParams, transfer
 import json
+import os
 
 #Docs: https://michaelhly.github.io/solana-py/
 
@@ -20,7 +21,7 @@ def create_account(sender_username):
             'secret_key': secret_key.decode("latin-1"),
         }
 
-        file_name = '{}.txt'.format(sender_username)
+        file_name = r'accounts/{}.txt'.format(sender_username)
         with open(file_name, 'w') as outfile:
             json.dump(data, outfile)
 
@@ -32,7 +33,7 @@ def create_account(sender_username):
 
 def load_wallet(sender_username):
     try:
-        file_name = '{}.txt'.format(sender_username)
+        file_name = r'accounts/{}.txt'.format(sender_username)
         with open(file_name) as json_file:
             account = json.load(json_file)
             account['secret_key'] = account['secret_key'].encode("latin-1")
@@ -96,9 +97,3 @@ def send_sol(sender_username, amount, receiver):
         print('error:', e)
         return None
 
-fund_account("account1", 2);
-print(get_balance("account1"))
-print(get_balance("account2"))
-send_sol("account1", 1, "account2")
-print(get_balance("account1"))
-print(get_balance("account2"))
