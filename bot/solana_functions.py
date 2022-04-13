@@ -49,7 +49,6 @@ def fund_account(sender_username, amount):
         account = load_wallet(sender_username)
         resp = solana_client.request_airdrop(
             account['public_key'], amount)
-        print(resp)
 
         transaction_id = resp['result']
         if transaction_id != None:
