@@ -22,6 +22,11 @@ async def on_ready():
     print('We have logged in as {0.user}'.format(client))
 
 # Commands
+@client.command('commands')
+async def commands(ctx):
+    await ctx.send("```\nCommands\n--------\n\n!create - create an account\n!fund <amount> - fund your account with CougarCoin\n!balance - view your CougarCoins\n!send <amount> <address> - send CougarCoin to another account```")
+
+
 @client.command('create')
 async def create(ctx):
     sender_username = ctx.message.author
@@ -48,20 +53,22 @@ async def fund(ctx):
     incoming_msg = ctx.message.content
     try:
         amount = float(incoming_msg.split(" ")[1])
-        if amount <= 2 :
-            message = "Requesting {} SOL to your Solana account, please wait !!!".format(amount)
+        if amount <= 10 :
+            message = "Requesting {} SOL to your Solana account, please wait.".format(amount)
             await ctx.send(message)
             transaction_id = fund_account(sender_username, amount)
             if transaction_id is not None:
-                message = "You have successfully requested {} SOL for your Solana account.".format(
-                    amount)
-                message += "The transaction id is {}".format(transaction_id)
+                message = "You have successfully requested {} SOL for your Solana account.".format(amount)
+                message2 = "The transaction id is {}".format(transaction_id)
+                message3 = "View your account at https://explorer.solana.com/address/{}?cluster=devnet".format(get_balance(sender_username)["publicKey"])
                 await ctx.send(message)
+                await ctx.send(message2)
+                await ctx.send(message3)
             else:
                 message = "Failed to fund your Solana account."
                 await ctx.send(message)
         else:
-            message = "The maximum amount allowed is 2 SOL."
+            message = "The maximum amount allowed is 10 SOL."
             await ctx.send(message)
     except Exception as e:
         print('error:',e)
@@ -76,9 +83,10 @@ async def balance(ctx):
         if data is not None:
             public_key = data['publicKey']
             balance = data['balance']
-            message = "Your Solana account {} balance is {} SOL".format(
-                public_key, balance)
+            message = "Your Solana account balance is {} SOL".format(balance)
+            message2 = "View your account at https://explorer.solana.com/address/{}?cluster=devnet".format(public_key)
             await ctx.send(message)
+            await ctx.send(message2)
         else:
             message = "Failed to retrieve balance"
             await ctx.send(message)
